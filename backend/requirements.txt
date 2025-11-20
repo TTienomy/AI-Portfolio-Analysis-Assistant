@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pandas
+yfinance
+scipy
+newspaper3k
+ta
+matplotlib
+google-generativeai
+pymupdf
+lxml_html_clean
+python-multipart
