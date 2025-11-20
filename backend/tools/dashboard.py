@@ -48,18 +48,33 @@ def get_news_analysis(ticker):
     except Exception as e:
         return f"News analysis failed: {str(e)}"
 
-def get_stock_dashboard(ticker):
+def get_stock_dashboard(ticker, ma_short=5, ma_medium=20, ma_long=60,
+                        macd_fast=12, macd_slow=26, macd_signal=9,
+                        rsi_window=14, stoch_window=14, bb_window=20,
+                        atr_window=14, cci_window=20, adx_window=14,
+                        selected_indicators=None):
     if not model:
         return {"error": "Gemini API Key missing"}
 
     # 1. Technical Data
     try:
-        df = get_technical_df(ticker)
+        # Pass custom parameters
+        df = get_technical_df(ticker, 
+                              ma_short=ma_short, ma_medium=ma_medium, ma_long=ma_long,
+                              macd_fast=macd_fast, macd_slow=macd_slow, macd_signal=macd_signal,
+                              rsi_window=rsi_window, stoch_window=stoch_window, bb_window=bb_window,
+                              atr_window=atr_window, cci_window=cci_window, adx_window=adx_window,
+                              selected_indicators=selected_indicators)
+                              
         if df.empty:
             return {"error": "No market data found"}
         
-        # Generate Chart
-        image_filename = plot_indicators(df, ticker)
+        # Generate Chart with custom parameters
+        image_filename = plot_indicators(df, ticker,
+                                         ma_short=ma_short, ma_medium=ma_medium, ma_long=ma_long,
+                                         macd_fast=macd_fast, macd_slow=macd_slow, macd_signal=macd_signal,
+                                         rsi_window=rsi_window, stoch_window=stoch_window, bb_window=bb_window,
+                                         atr_window=atr_window, cci_window=cci_window, adx_window=adx_window)
         image_url = f"/static/plots/{image_filename}"
         
         # Tech Summary
@@ -81,18 +96,15 @@ You are a Chief Investment Officer. Analyze the following data for **{ticker}** 
 ### 1. Technical Analysis
 {tech_summary}
 
-### 2. ESG Profile
-{esg_text}
-
-### 3. Recent News Context
+### 2. Recent News Context
 {news_analysis}
 
 ---
 **Your Task:**
-1.  **Executive Summary**: One sentence recommendation (Buy/Hold/Sell) with a confidence level.
-2.  **Key Drivers**: Bullet points explaining the main factors (Technical, Fundamental/News, ESG) driving your decision.
-3.  **Risk Assessment**: What could go wrong?
-4.  **Conclusion**: Final verdict.
+1.  Executive Summary: One sentence recommendation (Buy/Hold/Sell) with a confidence level.
+2.  Key Drivers: Bullet points explaining the main factors (Technical, Fundamental/News, ESG) driving your decision.
+3.  Risk Assessment: What could go wrong?
+4.  Conclusion: Final verdict.
 
 Keep it professional, concise, and actionable and do not include any formatting.
 """
@@ -109,7 +121,25 @@ Keep it professional, concise, and actionable and do not include any formatting.
 
     # Prepare historical data for frontend chart
     chart_data = df.copy()
-    chart_data['Date'] = chart_data['Date'].dt.strftime('%Y-%m-%d')
+    
+    # Ensure Date column exists
+    if "Date" not in chart_data.columns:
+        if isinstance(chart_data.index, pd.DatetimeIndex):
+            chart_data = chart_data.reset_index()
+            # If the index name was not 'Date', rename it
+            if "Date" not in chart_data.columns:
+                # Try to find the date column (it might be named 'index' or 'Date' or something else)
+                # Usually reset_index() on DatetimeIndex named 'Date' creates 'Date' column
+                # If it was unnamed, it might be 'index'
+                if 'index' in chart_data.columns:
+                    chart_data = chart_data.rename(columns={'index': 'Date'})
+                
+    # Now ensure we have a Date column to format
+    if 'Date' in chart_data.columns:
+        chart_data['Date'] = pd.to_datetime(chart_data['Date']).dt.strftime('%Y-%m-%d')
+    else:
+        # Fallback if something is really weird
+        chart_data['Date'] = [d.strftime('%Y-%m-%d') for d in chart_data.index]
     # Include all calculated indicators
     chart_data_dict = chart_data.to_dict(orient='records')
 

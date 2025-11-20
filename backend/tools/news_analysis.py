@@ -5,14 +5,13 @@ import configparser
 import os
 from tools.utils import retry_gemini
 
-# GNews API Key (Hardcoded as in original)
-# NewsAPI Key
-NEWS_API_KEY = "a99599d53394467e89f8cd2933ef2d9e"
-
-# Load Config
+# Load Config first
 config = configparser.ConfigParser()
 config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.ini")
 config.read(config_path)
+
+# NewsAPI Key - Load from config
+NEWS_API_KEY = config.get("NewsAPI", "API_KEY", fallback=None)
 
 # Configure Gemini
 try:

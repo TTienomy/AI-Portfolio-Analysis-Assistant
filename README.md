@@ -86,14 +86,28 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. Configure API keys in `config.ini`:
-```ini
-[API_KEYS]
-gemini_api_key = your_gemini_api_key_here
-news_api_key = your_newsapi_key_here
+4. Create `config.ini` from template:
+```bash
+cp config.ini.template config.ini
 ```
 
-5. Start the backend server:
+5. Configure your API keys in `config.ini`:
+```ini
+[Gemini]
+API_KEY = your_gemini_api_key_here
+
+[NewsAPI]
+API_KEY = your_newsapi_key_here
+```
+
+> [!IMPORTANT]
+> **API Keys Required:**
+> - **Gemini API**: Get your key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+> - **NewsAPI**: Get your key from [NewsAPI.org](https://newsapi.org/register)
+> 
+> The `config.ini` file is gitignored and will not be committed to version control.
+
+6. Start the backend server:
 ```bash
 python main.py
 ```
@@ -192,10 +206,15 @@ SideProject/
 
 ### Backend Configuration (`config.ini`)
 ```ini
-[API_KEYS]
-gemini_api_key = your_gemini_api_key_here
-news_api_key = your_newsapi_key_here
+[Gemini]
+API_KEY = your_gemini_api_key_here
+
+[NewsAPI]
+API_KEY = your_newsapi_key_here
 ```
+
+> [!WARNING]
+> Never commit `config.ini` to version control. Use `config.ini.template` as a reference.
 
 ### Environment Variables
 - Backend runs on port `8000`
