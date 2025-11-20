@@ -303,3 +303,4 @@ This is a personal side project. Feel free to fork and adapt for your own use.
 ## Support
 
 For issues or questions, please refer to the code documentation or create an issue in the repository.
+# AI-Portfolio-Analysis-Assistant
