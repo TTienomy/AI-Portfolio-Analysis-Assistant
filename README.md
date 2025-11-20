@@ -6,17 +6,34 @@ A full-stack web application for ESG (Environmental, Social, Governance) investm
 
 ### 📊 Technical Analysis
 - **Interactive Charts**: Real-time stock price visualization with multiple timeframes (1M, 3M, 6M, YTD, 1Y, All)
-- **Technical Indicators**:
-  - Moving Averages (MA5, MA20, MA60)
-  - Bollinger Bands
-  - RSI (Relative Strength Index)
-  - MACD (Moving Average Convergence Divergence)
-  - ADX (Average Directional Index)
-  - CCI (Commodity Channel Index)
-  - ATR (Average True Range)
-  - OBV (On-Balance Volume)
-- **Trading Signals**: AI-generated Buy/Sell/Hold recommendations based on multiple indicators
-- **Sub-Charts**: Toggle between Volume, MACD, RSI, and KD oscillators
+- **Enhanced Technical Indicators**:
+  - Moving Averages (MA5, MA20, MA60) - Customizable periods
+  - Bollinger Bands - Adjustable window size
+  - RSI (Relative Strength Index) - Configurable period
+  - MACD (Moving Average Convergence Divergence) - Custom fast/slow/signal periods
+  - Stochastic Oscillator (%K, %D) - Adjustable window
+  - ADX (Average Directional Index) - Trend strength indicator
+  - CCI (Commodity Channel Index) - Momentum indicator
+  - ATR (Average True Range) - Volatility measure
+  - OBV (On-Balance Volume) - Volume trend analysis
+  - **Ichimoku Cloud** - Complete cloud analysis with conversion/base lines
+  - **Williams %R** - Momentum oscillator for overbought/oversold
+  - **MFI (Money Flow Index)** - Volume-weighted RSI
+  - **VWAP (Volume Weighted Average Price)** - Intraday benchmark
+- **Signal Light System**: Visual trading signal with weighted scoring
+  - Color-coded recommendations (Strong Buy/Buy/Hold/Sell/Strong Sell)
+  - Normalized score from -1 to 1 based on multiple indicators
+  - Detailed breakdown of bullish/bearish signals per indicator
+  - Weighted analysis: MA (3), MACD (3), RSI (2), Bollinger (2), Ichimoku (2), Stochastic (1), OBV (1), Williams %R (1)
+- **Customizable Parameters**: 
+  - Quick presets (Default, Short-term Trading, Long-term Investing)
+  - Fine-tune individual indicator periods
+  - Real-time parameter adjustment
+- **Professional Chart Visualization**: 4-panel layout with dark theme
+  - Price action with MA and Bollinger Bands
+  - RSI and Stochastic oscillators
+  - MACD histogram and signal line
+  - Bollinger MA and VWAP comparison
 
 ### 🌱 ESG Analysis
 - **ESG Filtering**: Filter stocks by ESG providers (MSCI, Sustainalytics, Refinitiv)
@@ -181,7 +198,9 @@ SideProject/
 ├── backend/
 │   ├── main.py                 # FastAPI application
 │   ├── analysis.py             # Portfolio optimization
-│   ├── config.ini              # API keys configuration
+│   ├── config.ini              # API keys configuration (gitignored)
+│   ├── config.ini.template     # Configuration template
+│   ├── test_custom_params.py   # Testing utility for custom indicators
 │   ├── requirements.txt        # Python dependencies
 │   └── tools/
 │       ├── dashboard.py        # Dashboard data aggregation
@@ -195,6 +214,8 @@ SideProject/
 │   ├── components/
 │   │   ├── InteractiveChart.js # Advanced chart component
 │   │   ├── TechSignals.js      # Trading signals display
+│   │   ├── SignalLight.js      # Signal Light component (NEW)
+│   │   ├── TechAnalysis.js     # Technical analysis with custom params
 │   │   ├── ESGFilter.js        # ESG filtering UI
 │   │   └── PortfolioAnalysis.js # Portfolio optimization UI
 │   └── context/
@@ -230,12 +251,37 @@ API_KEY = your_newsapi_key_here
 
 ## Features in Detail
 
-### Technical Signals
-The system generates trading signals based on:
-- **MA Crossovers**: Price vs MA20
-- **RSI Levels**: Overbought (>70) / Oversold (<30)
-- **MACD**: Bullish/Bearish crossovers
-- **Bollinger Bands**: Price position relative to bands
+### Signal Light System
+The Signal Light provides intelligent trading recommendations using a weighted scoring system:
+
+**Weighted Indicators:**
+- **High Weight (3)**: Moving Average Crossovers, MACD - Primary trend indicators
+- **Medium Weight (2)**: RSI, Bollinger Bands, Ichimoku Cloud - Key momentum and volatility signals
+- **Low Weight (1)**: Stochastic, OBV, Williams %R - Supporting indicators
+
+**Scoring Logic:**
+- Each indicator contributes to a normalized score from -1 (strongly bearish) to +1 (strongly bullish)
+- **Strong Buy** (≥ 0.5): Multiple bullish signals across high-weight indicators
+- **Buy** (0.2 to 0.5): Moderate bullish sentiment
+- **Hold** (-0.2 to 0.2): Neutral or mixed signals
+- **Sell** (-0.5 to -0.2): Moderate bearish sentiment  
+- **Strong Sell** (≤ -0.5): Multiple bearish signals across high-weight indicators
+
+**Signal Details:**
+- Visual breakdown of each indicator's contribution
+- Color-coded bullish (green) / bearish (red) signals
+- Specific messages explaining each indicator's current state
+
+### Technical Signals Details
+The system analyzes the following technical patterns:
+- **MA Crossovers**: Golden Cross (bullish) / Death Cross (bearish) between MA20 and MA60
+- **RSI Levels**: Overbought (>70) / Oversold (<30) / Neutral (30-70)
+- **MACD**: Bullish/Bearish crossovers between MACD line and Signal line
+- **Bollinger Bands**: Price position relative to upper/lower bands
+- **Ichimoku Cloud**: Price above cloud (bullish) / below cloud (bearish) / inside cloud (neutral)
+- **Stochastic**: %K and %D crossovers for momentum shifts
+- **Williams %R**: Overbought (>-20) / Oversold (<-80)
+- **OBV**: Volume trend analysis (5-day comparison)
 - **ADX**: Trend strength (>25 = strong trend)
 - **CCI**: Momentum (>100 = overbought, <-100 = oversold)
 
