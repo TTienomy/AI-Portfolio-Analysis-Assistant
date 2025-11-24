@@ -1,0 +1,5 @@
+{
+  "name": "網路上隨便找的",
+  "description": "User created strategy",
+  "code": "import pandas as pd\n\nclass Strategy:\n    def __init__(self, data):\n        self.data = data\n        self.stop_loss = 0.02\n        self.take_profit = 0.04\n\n    def generate_signals(self):\n        signals = pd.Series(0, index=self.data.index)\n        ma5 = self.data['MA5']\n        ma20 = self.data['MA20']\n\n        long_condition = (ma5 > ma20) & (ma5.shift(1) <= ma20.shift(1))\n        short_condition = (ma5 < ma20) & (ma5.shift(1) >= ma20.shift(1))\n\n        signals[long_condition] = 1\n        signals[short_condition] = -1\n\n        # Implement stop loss and take profit outside the signal generation\n        # This is because backtesting frameworks usually handle order execution and position management.\n        # The signals only indicate the initial entry direction.\n\n        return signals"
+}

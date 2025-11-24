@@ -27,6 +27,7 @@ export default function Home() {
     { id: 'news', label: 'News Sentiment' },
     { id: 'pdf', label: 'PDF Report' },
     { id: 'tech', label: 'Technical Analysis' },
+    { id: 'backtest', label: 'Backtest Strategy' },
   ];
 
   return (
@@ -186,6 +187,19 @@ export default function Home() {
           {activeTab === 'tech' && (
             <div className="max-w-3xl mx-auto">
               <TechAnalysis />
+            </div>
+          )}
+
+          {activeTab === 'backtest' && (
+            <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-md rounded-xl p-8 shadow-lg border border-white/20 text-center">
+              <h2 className="text-2xl font-bold mb-4">策略回測系統</h2>
+              <p className="text-gray-300 mb-6">測試您的交易策略並分析歷史績效</p>
+              <button
+                onClick={() => router.push('/backtest')}
+                className="px-8 py-3 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold rounded-lg transition-all shadow-lg"
+              >
+                前往回測頁面
+              </button>
             </div>
           )}
         </motion.div>

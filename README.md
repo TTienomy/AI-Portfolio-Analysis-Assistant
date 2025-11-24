@@ -52,10 +52,37 @@ A full-stack web application for ESG (Environmental, Social, Governance) investm
 - **Sentiment Analysis**: AI-powered sentiment scoring
 - **Multi-language Support**: Chinese (Traditional) text processing with Jieba
 
-### 🤖 AI Investment Thesis
-- **Gemini AI Integration**: Comprehensive investment analysis using Google's Gemini API
-- **Multi-factor Synthesis**: Combines technical, fundamental, ESG, and sentiment data
-- **Visual Chart Analysis**: AI analyzes technical chart patterns
+### 🤖 AI Strategy Assistant
+- **Natural Language Generation**: Describe trading strategies in plain text (e.g., "Buy when RSI < 30 and MACD crosses up")
+- **Code Conversion**: Automatically convert external strategy code (e.g., from `backtesting.py` or other sources) into system-compatible format
+- **Strategy Optimization**: AI-powered suggestions to improve strategy logic (e.g., adding Stop Loss/Take Profit)
+- **Auto-Ticker Detection**: Automatically extracts stock tickers from pasted code
+
+### 📈 Strategy Backtesting
+- **Code Editor**: Write Python trading strategies with syntax highlighting
+- **Custom Strategy Management**:
+  - **Create**: Start from scratch or use templates
+  - **Save**: Persist your custom strategies to the local database
+  - **Delete**: Remove unused strategies
+- **AI Integration**:
+  - **Generate**: Create strategies from text prompts
+  - **Optimize**: One-click AI optimization of your current code
+- **File Upload**: Upload `.py` strategy files for testing
+- **Pre-built Templates**: 5 ready-to-use strategies (MA Crossover, RSI, MACD, Bollinger, Multi-Indicator)
+- **Flexible Parameters**: Customize ticker, date range, initial capital, commission, **Stop Loss**, and **Take Profit**
+- **Performance Metrics**: 
+  - Total Return & Return Percentage
+  - Sharpe Ratio (risk-adjusted returns)
+  - Maximum Drawdown
+  - Win Rate & Profit Factor
+  - Trade count and detailed history
+- **Visual Results**: 
+  - Interactive equity curve charts
+  - Performance metric cards
+  - Complete trade history table
+  - Matplotlib-generated plots
+- **Security**: Code validation to prevent dangerous operations
+
 
 ## Tech Stack
 
@@ -65,7 +92,7 @@ A full-stack web application for ESG (Environmental, Social, Governance) investm
   - yfinance (Stock data)
   - NewsAPI.org (News articles)
 - **AI/ML**:
-  - Google Gemini API (Investment analysis)
+  - Google Gemini API (Investment analysis & Strategy Generation)
   - Jieba (Chinese text segmentation)
 - **Technical Analysis**: TA-Lib, pandas
 - **Visualization**: matplotlib, seaborn
@@ -174,6 +201,26 @@ The frontend will run on `http://localhost:3000`
 - **Main Indicators**: Toggle MA5, MA20, MA60, Bollinger Bands
 - **Sub Indicators**: Switch between Volume, MACD, RSI, KD
 
+### Strategy Backtesting
+1. Navigate to `/backtest` page
+2. **AI Generation**:
+   - Switch to "AI 生成" tab
+   - Describe your strategy (e.g., "Buy when RSI < 30")
+   - Click "Generate" to get code
+3. **Code Editor**:
+   - Select a template or "New Strategy"
+   - Write or paste code
+   - Click **"✨ AI 轉換/優化"** to fix format or add features
+   - Click **"💾 儲存"** to save your custom strategy
+4. **Run Backtest**:
+   - Configure parameters (ticker, dates, capital, commission, SL/TP)
+   - Click "開始回測" to run
+5. View results including:
+   - Performance metrics (return, Sharpe ratio, drawdown, win rate)
+   - Interactive equity curve chart
+   - Detailed trade history
+
+
 ## API Endpoints
 
 ### Stock Analysis
@@ -191,6 +238,15 @@ The frontend will run on `http://localhost:3000`
 ### PDF Analysis
 - `POST /api/analyze-pdf` - Upload and analyze financial PDFs
 
+### Backtesting
+- `POST /api/backtest` - Execute trading strategy backtest
+- `POST /api/backtest/upload` - Upload and execute strategy file
+- `GET /api/backtest/templates` - Get strategy templates (including custom ones)
+- `POST /api/backtest/strategies` - Save a custom strategy
+- `DELETE /api/backtest/strategies/{key}` - Delete a custom strategy
+- `POST /api/backtest/generate` - Generate or optimize strategy using AI
+
+
 ## Project Structure
 
 ```
@@ -206,18 +262,23 @@ SideProject/
 │       ├── dashboard.py        # Dashboard data aggregation
 │       ├── tech_analysis.py    # Technical indicators & signals
 │       ├── news_analysis.py    # News sentiment analysis
-│       └── pdf_analysis.py     # PDF document analysis
+│       ├── pdf_analysis.py     # PDF document analysis
+│       └── backtesting.py      # Strategy backtesting engine
 ├── frontend/
 │   ├── app/
 │   │   ├── page.js             # Home page (ESG Portfolio)
-│   │   └── dashboard/[ticker]/ # Stock dashboard page
+│   │   ├── dashboard/[ticker]/ # Stock dashboard page
+│   │   └── backtest/           # Backtesting page
+│   │       └── page.js         # Strategy backtesting interface
 │   ├── components/
 │   │   ├── InteractiveChart.js # Advanced chart component
 │   │   ├── TechSignals.js      # Trading signals display
-│   │   ├── SignalLight.js      # Signal Light component (NEW)
+│   │   ├── SignalLight.js      # Signal Light component
 │   │   ├── TechAnalysis.js     # Technical analysis with custom params
 │   │   ├── ESGFilter.js        # ESG filtering UI
-│   │   └── PortfolioAnalysis.js # Portfolio optimization UI
+│   │   ├── PortfolioAnalysis.js # Portfolio optimization UI
+│   │   ├── StrategyEditor.js   # Code editor for strategies
+│   │   └── BacktestResults.js  # Backtest results visualization
 │   └── context/
 │       └── PortfolioContext.js # Global state management
 └── README.md
