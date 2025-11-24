@@ -22,58 +22,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ① Detect package manager (in /frontend)
-      - name: Detect package manager
-        id: detect
-        run: |
-          if [ -f "${{ github.workspace }}/frontend/yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            echo "runner=yarn --cwd frontend" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "${{ github.workspace }}/frontend/package.json" ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci --prefix frontend" >> $GITHUB_OUTPUT
-            echo "runner=npx --no-install --prefix frontend" >> $GITHUB_OUTPUT
-            exit 0
-          else
-            echo "Unable to determine package manager"
-            exit 1
-          fi
-
-      # ② Setup Node
+      # 不再偵測 package manager，因為你明確用 npm
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
-          cache-dependency-path: frontend/package-lock.json
 
-
-      # ③ Configure Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
           static_site_generator: next
 
-      # ④ Cache Next.js
+      # Cache Next.js build cache（這個和 npm cache 不同，可以保留）
       - name: Restore Next.js cache
         uses: actions/cache@v4
         with:
           path: frontend/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/**/package-lock.json', 'frontend/**/yarn.lock') }}-${{ hashFiles('frontend/**/*.[jt]s', 'frontend/**/*.[jt]sx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/**/package-lock.json') }}-${{ hashFiles('frontend/**/*.[jt]s', 'frontend/**/*.[jt]sx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('frontend/**/package-lock.json', 'frontend/**/yarn.lock') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('frontend/**/package-lock.json') }}-
 
-      # ⑤ Install deps
+      # 在 frontend 底下安裝依賴
       - name: Install dependencies
-        run: ${{ steps.detect.outputs.manager }} ${{ steps.detect.outputs.command }}
+        working-directory: ./frontend
+        run: npm ci
 
-      # ⑥ Build Next.js (in /frontend)
+      # 在 frontend 底下 build + export
       - name: Build Next.js
-        run: cd frontend && npx next build && npx next export
+        working-directory: ./frontend
+        run: |
+          npm run build
+          npx next export
 
-      # ⑦ Upload static artifacts
+      # 上傳 out 目錄（注意是 frontend/out）
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
