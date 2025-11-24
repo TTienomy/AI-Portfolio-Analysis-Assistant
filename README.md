@@ -151,7 +151,27 @@ API_KEY = your_newsapi_key_here
 > 
 > The `config.ini` file is gitignored and will not be committed to version control.
 
-6. Start the backend server:
+6. **Check for port conflicts** (if port 8000 is already in use):
+
+**Linux/macOS:**
+```bash
+# Check if port 8000 is in use
+lsof -i :8000
+
+# Kill the process using port 8000
+lsof -ti:8000 | xargs kill -9
+```
+
+**Windows:**
+```cmd
+# Check if port 8000 is in use
+netstat -ano | findstr :8000
+
+# Kill the process (replace PID with the actual process ID from above)
+taskkill /PID <PID> /F
+```
+
+7. Start the backend server:
 ```bash
 python main.py
 ```
