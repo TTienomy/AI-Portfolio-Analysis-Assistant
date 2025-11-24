@@ -45,7 +45,7 @@ jobs:
       # 在 frontend 底下安裝依賴
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: npm install
       
       - name: Build Next.js
         working-directory: ./frontend
