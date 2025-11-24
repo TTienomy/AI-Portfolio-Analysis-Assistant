@@ -46,8 +46,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: ${{ steps.detect.outputs.manager }}
+          cache: "npm"
           cache-dependency-path: frontend/package-lock.json
+
 
       # ③ Configure Pages
       - name: Setup Pages
