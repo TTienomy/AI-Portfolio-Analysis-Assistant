@@ -1,6 +1,6 @@
-# ESG Investment Dashboard
+# Investment Dashboard
 
-A full-stack web application for ESG (Environmental, Social, Governance) investment analysis with advanced technical indicators, AI-powered insights, and portfolio optimization.
+A full-stack web application for ESG (Environmental, Social, Governance) investment analysis and other important analysis with advanced technical indicators, AI-powered insights, and portfolio optimization.
 
 ## Features
 
