@@ -46,13 +46,13 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: npm ci
-
-      # 在 frontend 底下 build + export
+      
       - name: Build Next.js
         working-directory: ./frontend
         run: |
           npm run build
           npx next export
+
 
       # 上傳 out 目錄（注意是 frontend/out）
       - name: Upload artifact
